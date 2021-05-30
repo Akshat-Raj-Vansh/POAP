@@ -1,3 +1,5 @@
+// @dart=2.9
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../widgets/claim_token.dart';
@@ -8,13 +10,16 @@ class DeAi extends StatefulWidget {
 }
 
 class _DeAiState extends State<DeAi> {
-  final _imageUrl = "https://picsum.photos/250?image=9";
-  final _tokenUrl = "http://POAP.xyz/claim/g8by5z";
   final _eventUrl = "https://api.poap.xyz/events/id/2533";
+  var eventDetails = {
+    'id': 2533,
+    'name': 'Event Name',
+    'imageUrl': 'https://picsum.photos/250?image=9',
+  };
 
   @override
   void initState() {
-    //_getDetails();
+    _getDetails();
     super.initState();
   }
 
@@ -22,18 +27,9 @@ class _DeAiState extends State<DeAi> {
     return await http.get(Uri.parse(_eventUrl)).then(
       (result) {
         if (result.statusCode == 200) {
-          print(result.body);
-          return 'Success';
-        }
-        return 'Failure';
-      },
-    );
-  }
-
-  Future<String> _claimToken() async {
-    return await http.get(Uri.parse(_tokenUrl)).then(
-      (result) {
-        if (result.statusCode == 200) {
+          eventDetails['id'] = jsonDecode(result.body)['id'];
+          eventDetails['name'] = jsonDecode(result.body)['name'];
+          eventDetails['imageUrl'] = jsonDecode(result.body)['image_url'];
           return 'Success';
         }
         return 'Failure';
@@ -45,7 +41,9 @@ class _DeAiState extends State<DeAi> {
     showDialog<Null>(
       context: context,
       builder: (ctx) => AlertDialog(
-        content: ClaimToken(imageUrl: _imageUrl),
+        content: ClaimToken(
+            eventName: eventDetails['name'],
+            imageUrl: eventDetails['imageUrl']),
       ),
     );
   }

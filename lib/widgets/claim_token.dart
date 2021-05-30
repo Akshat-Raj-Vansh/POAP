@@ -1,13 +1,23 @@
+import 'dart:html';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class ClaimToken extends StatelessWidget {
   const ClaimToken({
     Key? key,
+    required String eventName,
     required String imageUrl,
   })  : _imageUrl = imageUrl,
+        _eventName = eventName,
         super(key: key);
 
   final String _imageUrl;
+  final String _eventName;
+  final _tokenUrl = "http://POAP.xyz/claim/g8by5z";
+
+  Future<void> _claimToken() async {
+    window.open(_tokenUrl, 'POAP');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +29,7 @@ class ClaimToken extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Event Name',
+            _eventName,
             style: TextStyle(fontSize: 30),
           ),
           Container(
@@ -30,8 +40,13 @@ class ClaimToken extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () {},
-            child: Text('Clain Token!'),
+            onPressed: _claimToken,
+            child: Text(
+              'Clain Token!',
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
           ),
         ],
       ),
