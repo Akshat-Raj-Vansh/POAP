@@ -1,4 +1,4 @@
-# deai
+# POAP
 
 A new Flutter project.
 
